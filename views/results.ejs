@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultados de la Búsqueda</title>
+</head>
+<body>
+    <h1>Resultados de la Búsqueda</h1>
+    <div>
+        <% products.forEach(product => { %>
+            <div>
+                <img src="<%= product.image %>" alt="<%= product.title %>">
+                <h2><%= product.title %></h2>
+                <p>Precio: <%= product.price %></p>
+                <a href="<%= product.link %>" target="_blank">Comprar</a>
+            </div>
+        <% }) %>
+    </div>
+    <!-- Agrega aquí la lógica para la paginación -->
+</body>
+</html>

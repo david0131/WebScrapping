@@ -1,0 +1,22 @@
+{
+  "name": "my-price-comparator",
+  "version": "0.0.1",
+  "description": "Comparador de precios en línea",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "Web Scraping",
+    "Playwright"
+  ],
+  "author": "David Escorcia",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.7",
+    "express": "^4.17.3",
+    "git": "^0.1.5",
+    "playwright": "^1.43.1"
+  }
+}
