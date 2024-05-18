@@ -22,7 +22,7 @@ h1.titulo {
 }
 
 div {
-    margin: 5px 0;
+    margin: 5px;
 }
 
 button {
@@ -55,4 +55,57 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+/* Alinear el contenedor del dropdown a la derecha */
+.dropdown-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-bottom: -20px;
+}
+
+/* Estilos para el botón */
+.dropdown-toggle {
+    background-color: #f9f9f9;
+    color: black;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Estilos para la lista desplegable */
+.dropdown-list {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+}
+
+/* Mostrar la lista cuando esté activa */
+.dropdown-list.show {
+    display: block;
+}
+
+/* Estilos para cada opción en el menú desplegable */
+.dropdown-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-option {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer; 
+}
+
+.dropdown-option:hover {
+    background-color: #f1f1f1;
 }

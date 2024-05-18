@@ -1,17 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados de la Búsqueda</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Función para alternar la visibilidad del menú desplegable
+            function toggleDropdown() {
+                document.querySelector('.dropdown-list').classList.toggle('show');
+            }
+
+            // Asigna el evento click al botón
+            document.querySelector('.dropdown-toggle').addEventListener('click', function (event) {
+                // Previene que el menú se abra al cargar la página
+                event.stopPropagation();
+                toggleDropdown();
+            });
+
+            // Cierra el menú desplegable si se hace clic fuera de él
+            window.onclick = function (event) {
+                if (!event.target.closest('.dropdown-toggle')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-list");
+                    for (var i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+
+            // Función para ordenar los productos
+            function sortProducts(order) {
+                var container = document.querySelector('.products-container');
+                var products = Array.from(container.querySelectorAll('.product'));
+
+                products.sort(function (a, b) {
+                    var priceA = parseFloat(a.querySelector('.price').innerText.replace('Precio: ', '').replace('$', ''));
+                    var priceB = parseFloat(b.querySelector('.price').innerText.replace('Precio: ', '').replace('$', ''));
+
+                    return order === 'asc' ? priceA - priceB : priceB - priceA;
+                });
+
+                // Reorganiza los productos en el DOM
+                products.forEach(function (product) {
+                    container.appendChild(product);
+                });
+            }
+
+            // Asignar las funciones de ordenación a los elementos de la lista
+            document.querySelectorAll('.dropdown-option').forEach(function (option) {
+                option.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var order = option.getAttribute('data-value') === 'price_asc' ? 'asc' : 'desc';
+                    sortProducts(order);
+                    toggleDropdown(); // Cierra el dropdown después de seleccionar una opción
+                });
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
     <h1>Resultados de la Búsqueda</h1>
-    <div>
+    <div class="dropdown-container">
+        <div class="dropdown">
+            <button class="dropdown-toggle">Ordenar por precio</button>
+            <div class="dropdown-list">
+                <ul>
+                    <li data-value="price_asc" class="dropdown-option">Menor a mayor</li>
+                    <li data-value="price_desc" class="dropdown-option">Mayor a menor</li>
+                </ul>
+            </div>
+            <select class="dropdown-main-select" style="display:none;">
+                <option value="price_asc">Precio: menor a mayor</option>
+                <option value="price_desc">Precio: mayor a menor</option>
+            </select>
+        </div>
+    </div>
+    <div class="products-container">
         <% products.forEach(product => { %>
-            <div>
-                <img src="<%= product.image %>" height="160" width="160" alt="<%= product.title %>">
-                <h2><%= product.title %></h2>
-                <p>Precio: <%= product.priceText %></p>
-                <a href="<%= product.link %>" target="_blank">Comprar</a>
+            <div class="product">
+                <img src="<%= product.image %>" height="250" width="250" alt="<%= product.title %>">
+                <h2>
+                    <%= product.title %>
+                </h2>
+                <p class="price">Precio: <%= product.priceText %></p>
+                <a href="<%= product.link %>" target="_blank">Ir a comprar</a>
             </div>
         <% }) %>
     </div>

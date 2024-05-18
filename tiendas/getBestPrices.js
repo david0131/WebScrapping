@@ -1,8 +1,8 @@
 //import { scrapeMercadoLibre } from './mercadoLibre.js';
 import { scrapeAlkosto } from './alkosto.js';
-// import { scrapeOlimpica } from './olimpica.js'
-// import { scrapeExito } from './exito.js'
-import { scrapeFalabella } from './falabella.js'
+//import { scrapeOlimpica } from './olimpica.js'
+import { scrapeExito } from './exito.js'
+//import { scrapeFalabella } from './falabella.js'
 // Importa funciones similares para Olímpica, Éxito, y Falabella
 
 export async function getBestPrices(productName) {
@@ -17,11 +17,11 @@ export async function getBestPrices(productName) {
     // const olimpica = await scrapeOlimpica(productName);
     // results.push(...olimpica);
 
-    // const exito = await scrapeExito(productName);
-    // results.push(...exito);
+    const exito = await scrapeExito(productName);
+    results.push(...exito);
 
-    const falabella = await scrapeFalabella(productName);
-    results.push(...falabella);
+    //const falabella = await scrapeFalabella(productName);
+    //results.push(...falabella);
 
     results.forEach(product => {
         if (typeof product.price === 'string') {
