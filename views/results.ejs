@@ -6,6 +6,10 @@
     <title>Resultados de la Búsqueda</title>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
+
+            let container = document.querySelector('.products-container');
+            let products = Array.from(container.querySelectorAll('.product'));
+
             // Función para alternar la visibilidad del menú desplegable
             function toggleDropdown() {
                 document.querySelector('.dropdown-list').classList.toggle('show');
@@ -33,20 +37,55 @@
 
             // Función para ordenar los productos
             function sortProducts(order) {
-                var container = document.querySelector('.products-container');
-                var products = Array.from(container.querySelectorAll('.product'));
 
                 products.sort(function (a, b) {
-                    var priceA = parseFloat(a.querySelector('.price').innerText.replace('Precio: ', '').replace('$', ''));
-                    var priceB = parseFloat(b.querySelector('.price').innerText.replace('Precio: ', '').replace('$', ''));
+                    let priceA = parseFloat(a.querySelector('.price').innerText.replace('Precio: ', '').replace('$', ''));
+                    let priceB = parseFloat(b.querySelector('.price').innerText.replace('Precio: ', '').replace('$', ''));
 
                     return order === 'asc' ? priceA - priceB : priceB - priceA;
                 });
 
-                // Reorganiza los productos en el DOM
-                products.forEach(function (product) {
+                pagination(1, 5);
+                
+            }
+
+            // Función para paginar
+            function pagination(page, perPage) {
+
+                // Calcular el índice de inicio y final de los productos en la página actual
+                let start = (page - 1) * perPage;
+                let end = start + perPage;
+                
+                // Filtrar los productos para mostrar solo los de la página actual
+                let productsToShow = products.slice(start, end);
+
+                // Limpiar el contenedor de productos
+                container.innerHTML = '';
+
+                // Agregar los productos de la página actual al contenedor
+                productsToShow.forEach(function (product) {
                     container.appendChild(product);
                 });
+            }
+
+            // Función para generar los botones de paginación y manejar los eventos de clic en los botones
+            function setupPagination(totalProducts, perPage) {
+                let totalPages = Math.ceil(totalProducts / perPage);
+                let paginationContainer = document.querySelector('.pagination-container');
+                
+                // Limpiar contenedor de paginación
+                paginationContainer.innerHTML = '';
+
+                // Generar botones de paginación
+                for (let i = 1; i <= totalPages; i++) {
+                    let button = document.createElement('button');
+                    button.textContent = i;
+                    button.addEventListener('click', function () {
+                        let actualPage = parseInt(this.textContent);
+                        pagination( actualPage, perPage);
+                    });
+                    paginationContainer.appendChild(button);
+                }
             }
 
             // Asignar las funciones de ordenación a los elementos de la lista
@@ -58,6 +97,20 @@
                     toggleDropdown(); // Cierra el dropdown después de seleccionar una opción
                 });
             });
+
+            // Asignar las funciones de paginación a los botones de paginación
+            // document.querySelector('.prev-page').addEventListener('click', prevPage);
+            // document.querySelector('.next-page').addEventListener('click', nextPage);
+
+            // Configurar paginación
+            let totalProducts = document.querySelectorAll('.product').length;
+            let perPage = 5; // Cambiar según la cantidad de productos que se desean mostrar por página
+            let currentPage = 1; // Página actual
+            setupPagination(totalProducts, perPage);
+
+            // Mostrar la primera página de productos al cargar la página
+            pagination(1, perPage);
+
         });
     </script>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
@@ -66,7 +119,9 @@
     <h1>Resultados de la Búsqueda</h1>
     <div class="dropdown-container">
         <div class="dropdown">
+            <button class="back-button" onclick="window.history.back()">Regresar</button>
             <button class="dropdown-toggle">Ordenar por precio</button>
+            <h3>Total de resultados: <%= products.length %></h3>
             <div class="dropdown-list">
                 <ul>
                     <li data-value="price_asc" class="dropdown-option">Menor a mayor</li>
@@ -79,18 +134,18 @@
             </select>
         </div>
     </div>
+    <!-- Contenedor para mostrar los productos -->
     <div class="products-container">
         <% products.forEach(product => { %>
             <div class="product">
                 <img src="<%= product.image %>" height="250" width="250" alt="<%= product.title %>">
-                <h2>
-                    <%= product.title %>
-                </h2>
+                <h2><%= product.title %></h2>
                 <p class="price">Precio: <%= product.priceText %></p>
                 <a href="<%= product.link %>" target="_blank">Ir a comprar</a>
             </div>
         <% }) %>
     </div>
-    <!-- Agrega aquí la lógica para la paginación -->
+    <div class="pagination-container">
+    </div>
 </body>
 </html>
