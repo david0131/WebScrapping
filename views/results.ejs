@@ -8,9 +8,9 @@
     <div>
         <% products.forEach(product => { %>
             <div>
-                <img src="<%= product.image %>" alt="<%= product.title %>">
+                <img src="<%= product.image %>" height="160" width="160" alt="<%= product.title %>">
                 <h2><%= product.title %></h2>
-                <p>Precio: <%= product.price %></p>
+                <p>Precio: <%= product.priceText %></p>
                 <a href="<%= product.link %>" target="_blank">Comprar</a>
             </div>
         <% }) %>

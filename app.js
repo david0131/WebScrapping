@@ -22,7 +22,7 @@ app.get('/search', async (req, res) => {
 });
 
 // Servir archivos estáticos desde la carpeta "assets"
-app.use(express.static(__dirname + '/assets'))
+app.use(express.static(path.join(__dirname, 'assets')));
 
 // Ruta principal
 app.get('/', (req, res) => {
