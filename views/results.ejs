@@ -138,10 +138,10 @@
     <div class="products-container">
         <% products.forEach(product => { %>
             <div class="product">
-                <img src="<%= product.image %>" height="250" width="250" alt="<%= product.title %>">
+                <img src="<%= product.image %>" alt="<%= product.title %>">
                 <h2><%= product.title %></h2>
                 <p class="price">Precio: <%= product.priceText %></p>
-                <a href="<%= product.link %>" target="_blank">Ir a comprar</a>
+                <a href="<%= product.link %>" target="_blank">Ir a <%= product.store %>.com</a>
             </div>
         <% }) %>
     </div>

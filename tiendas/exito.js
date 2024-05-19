@@ -11,7 +11,7 @@ export async function scrapeExito(productName) {
 
     let products = [];
     let currentPage = 0;
-    const maxPages = 5; // Define el número máximo de páginas a las que quieres navegar
+    const maxPages = 2; // Define el número máximo de páginas a las que quieres navegar
 
     do {
         console.log(`Checking page ${currentPage + 1} for products...`);
@@ -43,7 +43,8 @@ export async function scrapeExito(productName) {
                 const formattedPrice = `${priceText}`;
                 const image = node.querySelector('a[data-fs-link="true"] img')?.src || '';
                 const link = titleElement.href;
-                return { title, priceText: formattedPrice, price, image, link };
+                const store = 'Exito';
+                return { title, priceText: formattedPrice, price, image, link, store };
             }).filter(Boolean); // Eliminar nulos
 
             let exactMatchProducts = productList.filter(product => {

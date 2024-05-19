@@ -35,7 +35,8 @@ export async function scrapeAlkosto(productName) {
             const formattedPrice = `${priceText}`;
             const image = node.querySelector('.product__item__information__image img')?.src || '';
             const link = node.querySelector('.product__item__information__view-details a')?.href || '';
-            return { title, priceText: formattedPrice, price, image, link };
+            const store = 'Alkosto';
+            return { title, priceText: formattedPrice, price, image, link, store };
         }).filter(product => {
             const productTitleNormalized = removeAccents(product.title).toLowerCase();
             if (productTitleNormalized === productNameNormalized.join(' ')) {
