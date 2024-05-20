@@ -151,7 +151,8 @@ h1 {
 
 .product h2 {
     margin-top: 10px;
-    color: #333;
+    color: #505050;
+    font-size: 18px;
 }
 
 h3 {
@@ -161,7 +162,7 @@ h3 {
 }
 
 .price {
-    color: #007bff;
+    color: #333;
     font-weight: bold;
     margin-top: 10px;
 }

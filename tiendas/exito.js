@@ -9,6 +9,8 @@ export async function scrapeExito(productName) {
     console.log('Navigating to Exito website...');
     await page.goto('https://www.exito.com/', { waitUntil: 'domcontentloaded' });
 
+    await page.waitForTimeout(5000);
+
     let products = [];
     let currentPage = 0;
     const maxPages = 2; // Define el número máximo de páginas a las que quieres navegar
@@ -21,7 +23,7 @@ export async function scrapeExito(productName) {
         await page.keyboard.press('Enter');
         console.log('Waiting for the search results to load...');
         await page.waitForSelector('article[data-testid="store-product-card"]', { timeout: 60000 });
-
+        await page.waitForTimeout(5000);
         console.log('Extracting product information...');
         let newProducts = await page.$$eval('article[data-testid="store-product-card"]', (nodes, productName) => {
             // Función para eliminar tildes
