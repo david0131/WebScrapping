@@ -1,8 +1,8 @@
-import { scrapeMercadoLibre } from './mercadoLibre.js';
-import { scrapeAlkosto } from './alkosto.js';
-import { scrapeExito } from './exito.js';
 import { scrapeOlimpica } from './olimpica.js';
-//import { scrapeFalabella } from './falabella.js'
+import { scrapeMercadoLibre } from './mercadoLibre.js';
+import { scrapeExito } from './exito.js';
+import { scrapeFalabella } from './falabella.js'
+import { scrapeAlkosto } from './alkosto.js';
 
 export async function getBestPrices(productName) {
     const results = [];
@@ -10,17 +10,17 @@ export async function getBestPrices(productName) {
     const olimpica = await scrapeOlimpica(productName);
     results.push(...olimpica);
 
-    const alkosto = await scrapeAlkosto(productName);
-    results.push(...alkosto);
+    const mercadoLibre = await scrapeMercadoLibre(productName);
+    results.push(...mercadoLibre);
+    
+    const falabella = await scrapeFalabella(productName);
+    results.push(...falabella);
 
     const exito = await scrapeExito(productName);
     results.push(...exito);
 
-    const mercadoLibre = await scrapeMercadoLibre(productName);
-    results.push(...mercadoLibre);
-    
-    //const falabella = await scrapeFalabella(productName);
-    //results.push(...falabella);
+    const alkosto = await scrapeAlkosto(productName);
+    results.push(...alkosto);
 
     results.forEach(product => {
         if (typeof product.price === 'string') {

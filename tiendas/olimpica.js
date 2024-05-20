@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 export async function scrapeOlimpica(productName) {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
 
     page.on('console', message => console.log('BROWSER-CONSOLE:', message.text()));
@@ -9,7 +9,7 @@ export async function scrapeOlimpica(productName) {
     console.log('Navegando a la página de Olímpica...');
     await page.goto('https://www.olimpica.com/', { waitUntil: 'domcontentloaded' });
 
-    await page.waitForTimeout(3500);
+    await page.waitForTimeout(2000);
 
     console.log('Rellenando el campo de búsqueda...');
     await page.fill('input.vtex-styleguide-9-x-input', productName);
@@ -28,13 +28,7 @@ export async function scrapeOlimpica(productName) {
 
     console.log('Realizando scroll down en la página de resultados...');
     const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight);
-    await page.mouse.wheel(0, scrollHeight * 0.5);
-
-    console.log('Esperando antes de hacer otro scroll...');
-    await page.waitForTimeout(3000);
-
-    console.log('Realizando segundo scroll down...');
-    await page.mouse.wheel(0, scrollHeight * 0.3);
+    await page.mouse.wheel(0, scrollHeight * 0.6);
 
     console.log('Esperando antes de volver al inicio...');
     await page.waitForTimeout(3000);
@@ -42,9 +36,9 @@ export async function scrapeOlimpica(productName) {
     console.log('Volviendo al inicio de la página...');
     await page.mouse.wheel(0, -scrollHeight * 1.3); // Ajusta este valor si es necesario
 
-    await page.waitForTimeout(3000);
-
     await page.waitForSelector('.vtex-product-summary-2-x-clearLink', { timeout: 60000 });
+
+    await page.waitForTimeout(2500);
 
     console.log('Extrayendo información de los productos...');
     let products = [];

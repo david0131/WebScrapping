@@ -15,6 +15,7 @@ export async function scrapeMercadoLibre(productName) {
     await page.click('button.nav-search-btn');
     console.log('Esperando a que los resultados de búsqueda se carguen...');
     await page.waitForSelector('.ui-search-results.ui-search-results--without-disclaimer', { timeout: 60000 });
+    await page.waitForTimeout(6000);
 
     console.log('Extrayendo información de los primeros 5 productos...');
     let products = await page.$$eval('.ui-search-layout__item.shops__layout-item.ui-search-layout__stack', (nodes, productName) => {
