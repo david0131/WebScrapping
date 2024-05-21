@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 export async function scrapeOlimpica(productName) {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: false });
     const page = await browser.newPage();
 
     page.on('console', message => console.log('BROWSER-CONSOLE:', message.text()));
@@ -9,7 +9,7 @@ export async function scrapeOlimpica(productName) {
     console.log('Navegando a la página de Olímpica...');
     await page.goto('https://www.olimpica.com/', { waitUntil: 'domcontentloaded' });
 
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(12000);
 
     console.log('Rellenando el campo de búsqueda...');
     await page.fill('input.vtex-styleguide-9-x-input', productName);
