@@ -1,7 +1,7 @@
 import { scrapeOlimpica } from './olimpica.js';
 import { scrapeMercadoLibre } from './mercadoLibre.js';
 import { scrapeExito } from './exito.js';
-import { scrapeFalabella } from './falabella.js'
+import { scrapeFalabella } from './falabella.js';
 import { scrapeAlkosto } from './alkosto.js';
 
 export async function getBestPrices(productName) {

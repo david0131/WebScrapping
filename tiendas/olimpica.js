@@ -9,7 +9,7 @@ export async function scrapeOlimpica(productName) {
     console.log('Navegando a la página de Olímpica...');
     await page.goto('https://www.olimpica.com/', { waitUntil: 'domcontentloaded' });
 
-    await page.waitForTimeout(12000);
+    await page.waitForTimeout(9000);
 
     console.log('Rellenando el campo de búsqueda...');
     await page.fill('input.vtex-styleguide-9-x-input', productName);
@@ -107,7 +107,7 @@ export async function scrapeOlimpica(productName) {
         console.log(`Producto: ${product.title}, Precio: ${product.priceText}`);
     });
 
-    console.log('Cerrando el navegador...');
+    console.log('Cerrando el navegador olimpica');
     await browser.close();
     console.log('Proceso completado. Devolviendo los productos...');
     return cheapestProducts;

@@ -75,7 +75,7 @@ export async function scrapeExito(productName) {
         console.log(`Product: ${product.title}, Price: ${product.priceText}`);
     });
 
-    console.log('Closing the browser...');
+    console.log('Cerrando el navegador exito');
     await browser.close();
     console.log('Process completed. Returning the products...');
     return cheapestProducts;

@@ -58,7 +58,7 @@ export async function scrapeAlkosto(productName) {
         console.log(`Producto: ${product.title}, Precio: ${product.priceText}`);
     });
 
-    console.log('Cerrando el navegador...');
+    console.log('Cerrando el navegador alkosto');
     await browser.close();
     console.log('Proceso completado. Devolviendo los productos...');
     return cheapestProducts;

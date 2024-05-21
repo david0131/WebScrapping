@@ -1,73 +1,65 @@
 import { chromium } from 'playwright';
 
-export async function scrapeFalabella(productName) {
+export const scrapeFalabella = async (productName) => {
+
     const browser = await chromium.launch({ headless: false });
     const page = await browser.newPage();
 
-    page.on('console', message => console.log('BROWSER-CONSOLE:', message.text()));
+    console.log('Navegando a la página de falabella...');
+    await page.goto(`https://www.falabella.com.co/falabella-co/search?Ntt=${productName}`);
 
-    console.log('Navigating to Falabella website...');
-    await page.goto('https://www.falabella.com.co/', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector(".subTitle-rebrand");
 
-    await page.waitForTimeout(5000);
-
-    console.log('Filling in the search field...');
-    await page.fill('input.SearchBar-module_searchBar__Input__1kPKS', productName);
-
-    console.log('Clicking the search button...');
-    await page.click('button.SearchBar-module_searchBtnIcon__2L2s0');
-
-    console.log('Waiting for the search results to load...');
-    await page.waitForSelector('b.pod-subTitle', { timeout: 60000 });
-    await page.waitForTimeout(5000);
-
-    console.log('Extracting product information...');
-    let products = await page.$$eval('div.search-results-list', (nodes, productName) => {
+    const productDetails = await page.evaluate((productName) => {
         // Función para eliminar tildes y normalizar texto
         function removeAccents(str) {
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         }
 
-        const productNameNormalized = removeAccents(productName).toLowerCase();
+        const productNameNormalized = removeAccents(productName).toLowerCase().split(' ');
 
-        return nodes.map(node => {
-            const titleElement = node.querySelector('b.pod-subTitle');
-            const title = titleElement ? titleElement.innerText.trim() : '';
-            const titleNormalized = removeAccents(title).toLowerCase();
+        let items = Array.from(document.querySelectorAll('.search-results-4-grid')); // Selector que engloba cada producto
+        if (items.length == 0) {
+            items = Array.from(document.querySelectorAll('.search-results-list'));
+        }
 
-            // Verificar si el título normalizado contiene el nombre del producto normalizado
-            if (!titleNormalized.includes(productNameNormalized)) {
-                return null;
-            }
+        return items.slice(0, 5).map(item => {
+            const nameElement = item.querySelector('b[id^="testId-pod-displaySubTitle"]');
+            const name = nameElement ? nameElement.innerText.trim() : '';
+            const nameNormalized = removeAccents(name).toLowerCase();
 
-            const priceElement = node.querySelector('div.jsx-2112733514.cmr-icon-container span.copy10');
-            const priceText = priceElement ? priceElement.innerText.trim() : '';
+            let priceText = item.querySelector('.copy10.medium')?.innerText.trim() || '';
             const price = parseFloat(priceText.replace(/[^\d,.-]+/g, '').replace(',', '.'));
 
-            const imageElement = node.querySelector('img.jsx-1996933093'); // Asegúrate de que este selector sea correcto
-            const imageSrc = imageElement ? imageElement.src : '';
+            const imageElement = item.querySelector('picture img');
+            const imageLink = imageElement ? imageElement.src : '';
 
-            const linkElement = node.querySelector('a.pod-link');
-            const link = linkElement ? linkElement.href : '';
+            const linkElement = item.querySelector('.jsx-1484439449');
+            const articleLink = linkElement ? linkElement.children[0].href : '';
 
             const store = 'Falabella';
-            return { title, priceText, price, image: imageSrc, link, store };
+
+            // Filtrar productos que coincidan con el nombre buscado
+            if (productNameNormalized.every(word => nameNormalized.includes(word))) {
+                return { name, priceText, price, imageLink, articleLink, store };
+            }
+            return null;
         }).filter(Boolean); // Eliminar nulos
     }, productName);
 
-    // Ordenar los productos por precio y seleccionar los 3 más baratos
-    const sortedProducts = products.sort((a, b) => a.price - b.price);
-    const cheapestProducts = sortedProducts.slice(0, 3);
+    console.log('Cerrando el navegador falabella');
+    await browser.close(); // Cierra el navegador una vez que has terminado de raspar los datos.
 
-    // Mostrar precios por consola
-    cheapestProducts.forEach(product => {
-        console.log(`Product: ${product.title}, Price: ${product.priceText}`);
+    productDetails.map((product) => {
+        if (typeof product.price === 'string') {
+            product.price = parseInt(product.price.substring(2).replaceAll(".", ''));
+        }
+        // No es necesario convertir 'product.rating' si ya es un número flotante.
     });
 
-    console.log('Closing the browser...');
-    await browser.close();
-    console.log('Process completed. Returning the products...');
-    return cheapestProducts;
-}
+    productDetails.sort((a, b) => a.price - b.price); // Ordena los productos por precio, del más bajo al más alto.
+
+    return productDetails.slice(0, 3); // Devuelve solo los 3 productos más baratos.
+};
 
 export default scrapeFalabella;
