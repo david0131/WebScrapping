@@ -1,10 +1,8 @@
 import { chromium } from 'playwright';
 
 export async function scrapeExito(productName) {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
-
-    page.on('console', message => console.log('BROWSER-CONSOLE:', message.text()));
 
     console.log('Navigating to Exito website...');
     await page.goto('https://www.exito.com/', { waitUntil: 'domcontentloaded' });

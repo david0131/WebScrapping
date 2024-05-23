@@ -1,10 +1,8 @@
 import { chromium } from 'playwright';
 
 export async function scrapeAlkosto(productName) {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
-
-    page.on('console', message => console.log('BROWSER-CONSOLE:', message.text()));
 
     console.log('Navegando a la página de Alkosto...');
     await page.goto('https://www.alkosto.com/', { waitUntil: 'domcontentloaded' });

@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 export const scrapeFalabella = async (productName) => {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
 
     console.log('Navegando a la página de falabella...');
