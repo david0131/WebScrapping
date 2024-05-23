@@ -30,9 +30,13 @@ export async function scrapeAlkosto(productName) {
         // Extraer y filtrar los productos
         const productList = nodes.map(node => {
             const title = node.querySelector('.product__item__top__title')?.innerText || '';
+
             let priceText = node.querySelector('.product__price--discounts__price .price')?.innerText || '';
-            const price = parseFloat(priceText.replace(/[^\d,.-]+/g, '').replace(',', '.'));
+            let cleanedPriceText = priceText.replace(/[^\d.,]+/g, '');
+            cleanedPriceText = cleanedPriceText.replace(/\./g, '').replace(',', '.');
+            const price = parseFloat(cleanedPriceText);
             const formattedPrice = `${priceText}`;
+
             const image = node.querySelector('.product__item__information__image img')?.src || '';
             const link = node.querySelector('.product__item__information__view-details a')?.href || '';
             const store = 'Alkosto';

@@ -32,7 +32,7 @@ export async function scrapeExito(productName) {
             const titleElement = node.querySelector('h3[data-fs-product-card-title="true"] a');
             if (!titleElement) return null; // Si no se encuentra el elemento del título, retorna null
             const title = titleElement.innerText;
-            if (!title || title.toLowerCase().includes('reacondicionado')) {
+            if (!title || title.toLowerCase().includes('reacondicionado') || title.toLowerCase().includes('Reacondicionado')) {
                 return null; // Ignorar si no hay título o si es un producto reacondicionado
             }
             let priceText = node.querySelector('p[data-fs-container-price-otros="true"]')?.innerText || '';
@@ -53,9 +53,10 @@ export async function scrapeExito(productName) {
         let partialMatchProducts = productList.filter(product => {
             const productTitleNormalized = removeAccents(product.title).toLowerCase();
             const containsAllWords = productNameNormalized.every(word => productTitleNormalized.includes(word));
-            const excludesTerms = !['cargador', 'fundas'].some(term => productTitleNormalized.includes(term));
+            const excludedTerms = ['reacondicionado', 'cargador', 'funda', 'cable', 'accesorio'];
+            const excludesTerms = !excludedTerms.some(term => productTitleNormalized.includes(term));
             return containsAllWords && excludesTerms;
-        });
+        });        
 
         // Combinar los productos encontrados
         return [...exactMatchProducts, ...partialMatchProducts];

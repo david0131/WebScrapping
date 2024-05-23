@@ -14,6 +14,7 @@ export async function getBestPrices(productName) {
     results.push(...mercadoLibre);
     
     const falabella = await scrapeFalabella(productName);
+    console.log(falabella);
     results.push(...falabella);
 
     const exito = await scrapeExito(productName);

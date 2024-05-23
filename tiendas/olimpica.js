@@ -66,9 +66,11 @@ export async function scrapeOlimpica(productName) {
                     if (priceElement) {
                         priceText = priceElement.innerText.trim(); // Utiliza innerText para obtener todo el texto del div
                     }
-                    const price = parseFloat(priceText.replace(/[^\d,.-]+/g, '').replace(',', '.'));
+                    let cleanedPriceText = priceText.replace(/[^\d.,]+/g, '');
+                    cleanedPriceText = cleanedPriceText.replace(/\./g, '').replace(',', '.');
+                    const price = parseFloat(cleanedPriceText);
                     const formattedPrice = `${priceText}`;
-
+                    
                     const imageElement = node.querySelector('.vtex-product-summary-2-x-imageNormal');
                     const imageSrc = imageElement ? imageElement.getAttribute('src') : '';
 
@@ -79,7 +81,10 @@ export async function scrapeOlimpica(productName) {
                     return { title, priceText: formattedPrice, price, image: imageSrc, link: fullLink, store };
                 }).filter(product => {
                     const productTitleNormalized = removeAccents(product.title).toLowerCase();
-                    return !productTitleNormalized.includes("reacondicionado") && productNameNormalized.every(word => productTitleNormalized.includes(word));
+                    const excludedTerms = ['reacondicionado'];
+                    const excludesReacondicionado = !excludedTerms.some(term => productTitleNormalized.includes(term));
+                    const containsAllWords = productNameNormalized.every(word => productTitleNormalized.includes(word));
+                    return excludesReacondicionado && containsAllWords;
                 });
 
                 return productList;

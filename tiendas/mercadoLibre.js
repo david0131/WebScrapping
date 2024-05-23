@@ -29,15 +29,17 @@ export async function scrapeMercadoLibre(productName) {
         // Extraer y filtrar los primeros 5 productos que coincidan con el nombre del producto
         const productList = nodes.slice(0, 5).map(node => {
             const title = node.querySelector('section').getAttribute('aria-label') || '';
-            // Seleccionar el elemento de precio que incluye 'part--medium' y no 'part--small'
-            const priceElement = node.querySelector('.andes-money-amount.ui-search-price__part--medium:not(.ui-search-price__part--small) .andes-money-amount__fraction');
 
+            const priceElement = node.querySelector('.andes-money-amount.ui-search-price__part--medium:not(.ui-search-price__part--small) .andes-money-amount__fraction');
             let priceText = '';
             if (priceElement) {
-                priceText = `$${priceElement.innerText.trim()}`;
+                priceText = priceElement.innerText.trim();
             }
-            const price = parseFloat(priceText.replace(/[^\d,.-]+/g, '').replace(',', '.'));
+            let cleanedPriceText = priceText.replace(/[^\d.,]+/g, '');
+            cleanedPriceText = cleanedPriceText.replace(/\./g, '').replace(',', '.');
+            const price = parseFloat(cleanedPriceText);
             const formattedPrice = `${priceText}`;
+
             const imageElement = node.querySelector('.ui-search-result-image__element');
             const imageSrc = imageElement ? imageElement.getAttribute('src') : '';
             const link = node.querySelector('a.ui-search-link')?.href || '';
