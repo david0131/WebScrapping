@@ -33,9 +33,17 @@ export async function scrapeExito(productName) {
             if (!title || title.toLowerCase().includes('reacondicionado') || title.toLowerCase().includes('Reacondicionado')) {
                 return null; // Ignorar si no hay título o si es un producto reacondicionado
             }
-            let priceText = node.querySelector('p[data-fs-container-price-otros="true"]')?.innerText || '';
-            const price = parseFloat(priceText.replace(/[^\d,.-]+/g, '').replace(',', '.')) || 0;
+
+            const priceElement = node.querySelector('p[data-fs-container-price-otros="true"]');
+            let priceText = '';
+            if (priceElement) {
+                priceText = priceElement.innerText.trim();
+            }
+            let cleanedPriceText = priceText.replace(/[^\d.,]+/g, '');
+            cleanedPriceText = cleanedPriceText.replace(/\./g, '').replace(',', '.');
+            const price = parseFloat(cleanedPriceText);
             const formattedPrice = `${priceText}`;
+
             const image = node.querySelector('a[data-fs-link="true"] img')?.src || '';
             const link = titleElement.href;
             const store = 'Exito';

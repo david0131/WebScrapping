@@ -28,7 +28,9 @@ export const scrapeFalabella = async (productName) => {
             const nameNormalized = removeAccents(title).toLowerCase();
 
             let priceText = item.querySelector('.copy10.medium')?.innerText.trim() || '';
-            const price = parseFloat(priceText.replace(/[^\d,.-]+/g, '').replace(',', '.'));
+            let cleanedPriceText = priceText.replace(/[^\d,.-]+/g, '');
+            cleanedPriceText = cleanedPriceText.replace(/\./g, '').replace(',', '.');
+            const price = parseFloat(cleanedPriceText);
 
             const image = item.querySelector('img.jsx-1996933093')?.src;
             const link = item.querySelector('.pod-link')?.href;
